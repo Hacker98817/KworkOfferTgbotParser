@@ -85,7 +85,7 @@ category_data = {
         "keyboard": engineering_architecture_inline_keyboard,
         "subcategories": {
             "subcategory_engineering_all": "All - Engineering & Architecture",
-            "subcategory_engineering_landscape": "Building & Landscape Architecture",
+            "subcategory_engineering_building": "Building & Landscape Architecture",
             "subcategory_engineering_chemical": "Chemical Engineering",
             "subcategory_engineering_civil": "Civil & Structural Engineering",
             "subcategory_engineering_contract": "Contract Manufacturing",
@@ -93,7 +93,7 @@ category_data = {
             "subcategory_engineering_interior": "Interior & Trade Show Design",
             "subcategory_engineering_energy": "Energy & Mechanical Engineering",
             "subcategory_engineering_physical": "Physical Sciences",
-            "subcategory_engineering_cad": "3D Modeling & CAD",
+            "subcategory_engineering_3d_modeling": "3D Modeling & CAD",
         },
     },
     "category_dev_it": {
@@ -101,7 +101,7 @@ category_data = {
         "keyboard": it_networking_inline_keyboard,
         "subcategories": {
             "subcategory_it_all": "All - IT & Networking",
-            "subcategory_it_database_management": "Database Management & Administration",
+            "subcategory_it_database": "Database Management & Administration",
             "subcategory_it_erp_crm": "ERP/CRM Software",
             "subcategory_it_security": "Information Security & Compliance",
             "subcategory_it_networking": "Network & System Administration",
@@ -115,7 +115,7 @@ category_data = {
             "subcategory_legal_all": "All - Legal",
             "subcategory_legal_corporate": "Corporate & Contract Law",
             "subcategory_legal_international": "International & Immigration Law",
-            "subcategory_legal_finance": "Finance & Tax Law",
+            "subcategory_legal_finance_tax": "Finance & Tax Law",
             "subcategory_legal_public": "Public Law",
         },
     },
@@ -125,8 +125,8 @@ category_data = {
         "subcategories": {
             "subcategory_sales_all": "All - Sales & Marketing",
             "subcategory_sales_digital": "Digital Marketing",
-            "subcategory_sales_leadgen": "Lead Generation & Telemarketing",
-            "subcategory_sales_pr": "Marketing, PR & Brand Strategy",
+            "subcategory_sales_lead_generation": "Lead Generation & Telemarketing",
+            "subcategory_sales_marketing_pr": "Marketing, PR & Brand Strategy",
         },
     },
     "category_translation": {
@@ -134,8 +134,8 @@ category_data = {
         "keyboard": translation_inline_keyboard,
         "subcategories": {
             "subcategory_translation_all": "All - Translation",
-            "subcategory_translation_teaching": "Language Tutoring & Interpretation",
-            "subcategory_translation_services": "Translation & Localization Services",
+            "subcategory_translation_tutoring": "Language Tutoring & Interpretation",
+            "subcategory_translation_localization": "Translation & Localization Services",
         },
     },
     "category_web_mobile_software": {
@@ -150,10 +150,10 @@ category_data = {
             "subcategory_dev_game": "Game Design & Development",
             "subcategory_dev_mobile": "Mobile Development",
             "subcategory_dev_other": "Other - Software Development",
-            "subcategory_dev_product_management": "Product Management & Scrum",
+            "subcategory_dev_product": "Product Management & Scrum",
             "subcategory_dev_qa": "QA Testing",
             "subcategory_dev_scripts": "Scripts & Utilities",
-            "subcategory_dev_design": "Web & Mobile Design",
+            "subcategory_dev_web_mobile_design": "Web & Mobile Design",
             "subcategory_dev_web": "Web Development",
         },
     },
@@ -162,7 +162,7 @@ category_data = {
         "keyboard": writing_inline_keyboard,
         "subcategories": {
             "subcategory_writing_all": "All - Writing",
-            "subcategory_writing_copywriting": "Sales & Marketing Copywriting",
+            "subcategory_writing_sales": "Sales & Marketing Copywriting",
             "subcategory_writing_content": "Content Writing",
             "subcategory_writing_editing": "Editing & Proofreading Services",
             "subcategory_writing_professional": "Professional & Business Writing",

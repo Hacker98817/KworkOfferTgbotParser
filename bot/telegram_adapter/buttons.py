@@ -100,14 +100,14 @@ design_creative_inline_keyboard = InlineKeyboardMarkup(
     row_width=1, inline_keyboard=[design_creative_buttons]
 )
 
-#ПРОДОЛЖИТЬ ОТСЮДА
+
 # Подкатегории для "Engineering & Architecture" (Инженерия и архитектура)
 engineering_architecture_buttons = [
     InlineKeyboardButton(text="All - Engineering & Architecture", callback_data="subcategory_engineering_all"),
     InlineKeyboardButton(text="Building & Landscape Architecture", callback_data="subcategory_engineering_building"),
     InlineKeyboardButton(text="Chemical Engineering", callback_data="subcategory_engineering_chemical"),
     InlineKeyboardButton(text="Civil & Structural Engineering", callback_data="subcategory_engineering_civil"),
-    InlineKeyboardButton(text="Contract Manufacturing", callback_data="subcategory_engineering_contract_manufacturing"),
+    InlineKeyboardButton(text="Contract Manufacturing", callback_data="subcategory_engineering_contract"),
     InlineKeyboardButton(text="Electrical & Electronic Engineering", callback_data="subcategory_engineering_electrical"),
     InlineKeyboardButton(text="Interior & Trade Show Design", callback_data="subcategory_engineering_interior"),
     InlineKeyboardButton(text="Energy & Mechanical Engineering", callback_data="subcategory_engineering_energy"),
@@ -127,7 +127,7 @@ it_networking_buttons = [
     InlineKeyboardButton(text="Database Management & Administration", callback_data="subcategory_it_database"),
     InlineKeyboardButton(text="ERP/CRM Software", callback_data="subcategory_it_erp_crm"),
     InlineKeyboardButton(text="Information Security & Compliance", callback_data="subcategory_it_security"),
-    InlineKeyboardButton(text="Network & System Administration", callback_data="subcategory_it_network_admin"),
+    InlineKeyboardButton(text="Network & System Administration", callback_data="subcategory_it_networking"),
     InlineKeyboardButton(text="DevOps & Solution Architecture", callback_data="subcategory_it_devops"),
 ]
 
@@ -178,15 +178,15 @@ translation_inline_keyboard = InlineKeyboardMarkup(
     row_width=1, inline_keyboard=[translation_buttons]
 )
 
-
+#ПРОДОЛЖИТЬ ОТСЮДА
 # Подкатегории для "Web, Mobile & Software Dev" (Разработка веб-, мобильных устройств и программного обеспечения)
 web_mobile_software_dev_buttons = [
     InlineKeyboardButton(text="All - Web, Mobile & Software Dev", callback_data="subcategory_dev_all"),
     InlineKeyboardButton(text="Blockchain, NFT & Cryptocurrency", callback_data="subcategory_dev_blockchain"),
-    InlineKeyboardButton(text="AI Apps & Integration", callback_data="subcategory_dev_ai_apps"),
+    InlineKeyboardButton(text="AI Apps & Integration", callback_data="subcategory_dev_ai"),
     InlineKeyboardButton(text="Desktop Application Development", callback_data="subcategory_dev_desktop"),
     InlineKeyboardButton(text="Ecommerce Development", callback_data="subcategory_dev_ecommerce"),
-    InlineKeyboardButton(text="Game Design & Development", callback_data="subcategory_dev_game"),
+    InlineKeyboardButton(text="Game Design & Development", callback_data="subcategory_game"),
     InlineKeyboardButton(text="Mobile Development", callback_data="subcategory_dev_mobile"),
     InlineKeyboardButton(text="Other - Software Development", callback_data="subcategory_dev_other"),
     InlineKeyboardButton(text="Product Management & Scrum", callback_data="subcategory_dev_product"),
