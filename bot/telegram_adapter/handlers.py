@@ -1,6 +1,7 @@
-from aiogram import Router
+from aiogram import Router, types
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
+from bot.db.database import add_user
 from buttons import (
     categories_keyboard,
     accounting_consulting_inline_keyboard,
@@ -16,8 +17,12 @@ from buttons import (
     web_mobile_software_dev_inline_keyboard,
     writing_inline_keyboard,
 )
+from buttons import expirience_level_keyboard
 
 router = Router()
+
+
+categories_keyboard_new = {}
 
 category_data = {
     "category_finance_accounting": {
@@ -174,9 +179,15 @@ category_data = {
 
 @router.message(Command("start"))
 async def start_handler(message: Message):
+    telegram_id = message.from_user.id
+    username = message.from_user.username
+
+    # Добавляем пользователя в базу данных, если его там нет
+    add_user(telegram_id, username)
     await message.answer(
         text="Привет! Выберите категорию, чтобы настроить фильтры:",
         reply_markup=categories_keyboard,
+
     )
 
 @router.callback_query()
@@ -200,9 +211,39 @@ async def button_handler(callback: CallbackQuery):
                 text=f"Вы выбрали подтему: {selected_subcategory}.\n"
                      f"Настройка фильтров для этой подтемы будет реализована в следующем шаге."
             )
+
+            # Переходим к настройке уровня опыта
+            await callback.message.edit_text(
+                text=f"Теперь выберите уровень опыта:",
+                reply_markup=expirience_level_keyboard,  # Показываем клавиатуру с уровнями
+            )
             await callback.answer()
             return  # Прерываем дальнейшую обработку
 
     # Если ни категория, ни подкатегория не найдены
     await callback.message.edit_text(text="Непонятное действие. Попробуйте снова.")
     await callback.answer()
+
+    level_mapping = {
+        "category_entry": "Начальный уровень",
+        "category_intermediate": "Средний уровень",
+        "category_expert": "Экспертный уровень",
+    }
+
+    if callback.data in level_mapping:
+        selected_level = level_mapping[callback.data]
+        await callback.message.edit_text(
+            text=f"Вы выбрали уровень опыта: {selected_level}.\n"
+                 f"Настройка завершена! Спасибо!",
+        )
+        await callback.answer()
+        return  # Прерываем дальнейшую обработку
+
+
+
+
+
+
+
+
+

@@ -20,8 +20,6 @@ categories_keyboard = InlineKeyboardMarkup(inline_keyboard=[
 
 
 
-
-
 # Подкатегории для "Accounting & Consulting" (Бухгалтерский учет и консалтинг)
 accounting_consulting_buttons = [
     InlineKeyboardButton(text="All - Accounting & Consulting", callback_data="subcategory_accounting_all"),
@@ -214,4 +212,18 @@ writing_buttons = [
 # Writing
 writing_inline_keyboard = InlineKeyboardMarkup(
     row_width=1, inline_keyboard=[writing_buttons]
+)
+
+
+
+#Кнопки цены
+expirience_level = [
+    InlineKeyboardButton(text="Entry Level", callback_data="category_entry"),
+    InlineKeyboardButton(text="Intermediate", callback_data="category_intermediate"),
+    InlineKeyboardButton(text="Expert", callback_data="category_expert"),
+]
+
+# Writing
+expirience_level_keyboard = InlineKeyboardMarkup(
+    row_width=1, inline_keyboard=[expirience_level]
 )
