@@ -2,6 +2,7 @@ from aiogram import Router, types
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 from bot.db.database import add_user
+from bot.db.database import temp_save_user_filters, save_or_update_group
 from buttons import (
     categories_keyboard,
     accounting_consulting_inline_keyboard,
@@ -192,6 +193,9 @@ async def start_handler(message: Message):
 
 @router.callback_query()
 async def button_handler(callback: CallbackQuery):
+    telegram_id = callback.from_user.id
+    username = callback.from_user.username
+
     # Проверяем, выбрана ли категория
     if callback.data in category_data:
         selected_category = category_data[callback.data]
@@ -201,6 +205,8 @@ async def button_handler(callback: CallbackQuery):
             reply_markup=selected_category["keyboard"],
         )
         await callback.answer()
+        # Сохраняем категорию во временные данные
+        temp_save_user_filters(telegram_id, category=selected_category["name"])
         return  # Прерываем дальнейшую обработку
 
     # Проверяем, выбрана ли подкатегория
@@ -218,6 +224,9 @@ async def button_handler(callback: CallbackQuery):
                 reply_markup=expirience_level_keyboard,  # Показываем клавиатуру с уровнями
             )
             await callback.answer()
+
+            # Сохраняем подкатегорию во временные данные
+            temp_save_user_filters(telegram_id, subcategory=selected_subcategory)
             return  # Прерываем дальнейшую обработку
 
     # Если ни категория, ни подкатегория не найдены
@@ -236,6 +245,13 @@ async def button_handler(callback: CallbackQuery):
             text=f"Вы выбрали уровень опыта: {selected_level}.\n"
                  f"Настройка завершена! Спасибо!",
         )
+
+        # Сохраняем уровень во временные данные
+        temp_save_user_filters(telegram_id, level=selected_level)
+
+        # Сохраняем фильтры в базу данных и проверяем наличие группы
+        await save_or_update_group(telegram_id)
+
         await callback.answer()
         return  # Прерываем дальнейшую обработку
 
