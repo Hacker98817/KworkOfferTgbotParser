@@ -19,6 +19,7 @@ from buttons import (
     writing_inline_keyboard,
 )
 from buttons import expirience_level_keyboard
+from bot.core.upwork_parser import parse_upwork
 
 router = Router()
 
@@ -176,7 +177,24 @@ category_data = {
     },
 }
 
+parsed_results = {}
 
+
+@router.message(Command("parsing"))
+async def start_handler(message: Message):
+    await message.answer('Выполняется поиск...')
+
+    # Запускаем парсинг и получаем результаты
+    results = parse_upwork()  # Без await, так как функция синхронная
+
+    # Если нет результатов
+    if not results:
+        await message.answer("Не найдено результатов.")
+        return
+
+    # Отправляем результаты
+    for result in results:
+        await message.answer(f"Название: {result['title']}\nСсылка: {result['link']}")
 
 @router.message(Command("start"))
 async def start_handler(message: Message):
@@ -243,17 +261,22 @@ async def button_handler(callback: CallbackQuery):
         selected_level = level_mapping[callback.data]
         await callback.message.edit_text(
             text=f"Вы выбрали уровень опыта: {selected_level}.\n"
-                 f"Настройка завершена! Спасибо!",
+                 f"Настройка завершена!, Введите команду /parsing что бы найти результаты",
         )
 
         # Сохраняем уровень во временные данные
         temp_save_user_filters(telegram_id, level=selected_level)
 
         # Сохраняем фильтры в базу данных и проверяем наличие группы
-        await save_or_update_group(telegram_id)
+        save_or_update_group(telegram_id)
 
         await callback.answer()
         return  # Прерываем дальнейшую обработку
+
+
+
+
+
 
 
 

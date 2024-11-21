@@ -227,3 +227,4 @@ expirience_level = [
 expirience_level_keyboard = InlineKeyboardMarkup(
     row_width=1, inline_keyboard=[expirience_level]
 )
+
