@@ -20,6 +20,8 @@ from buttons import (
 )
 from buttons import expirience_level_keyboard
 from bot.core.upwork_parser import parse_upwork
+from bot.db.database import get_link
+import asyncio
 
 router = Router()
 
@@ -31,148 +33,148 @@ category_data = {
         "name": "Accounting & Consulting",
         "keyboard": accounting_consulting_inline_keyboard,
         "subcategories": {
-            "subcategory_accounting_all": "All - Accounting & Consulting",
-            "subcategory_accounting_bookkeeping": "Accounting & Bookkeeping",
-            "subcategory_accounting_coaching": "Personal & Professional Coaching",
-            "subcategory_accounting_financial_planning": "Financial Planning",
-            "subcategory_accounting_hr": "Recruiting & Human Resources",
-            "subcategory_accounting_management": "Management Consulting & Analysis",
-            "subcategory_accounting_other": "Other - Accounting & Consulting",
+            "subcategory_accounting_all": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862721&from=find-work&sort=recency",
+            "subcategory_accounting_bookkeeping": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862721&from=find-work&sort=recency&subcategory2_uid=1534904461833879552",
+            "subcategory_accounting_coaching": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862721&from=find-work&sort=recency&subcategory2_uid=531770282601639943",
+            "subcategory_accounting_financial_planning": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862721&from=find-work&sort=recency&subcategory2_uid=531770282601639945",
+            "subcategory_accounting_hr": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862721&from=find-work&sort=recency&subcategory2_uid=531770282601639946",
+            "subcategory_accounting_management": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862721&from=find-work&sort=recency&subcategory2_uid=531770282601639944",
+            "subcategory_accounting_other": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862721&from=find-work&sort=recency&subcategory2_uid=531770282601639947",
         },
     },
     "category_admin_support": {
         "name": "Admin Support",
         "keyboard": admin_support_inline_keyboard,
         "subcategories": {
-            "subcategory_admin_all": "All - Admin Support",
-            "subcategory_admin_data_entry": "Data Entry & Transcription Services",
-            "subcategory_admin_virtual_assistance": "Virtual Assistance",
-            "subcategory_admin_project_management": "Project Management",
-            "subcategory_admin_market_research": "Market Research & Product Reviews",
+            "subcategory_admin_all": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668416&from=find-work&sort=recency",
+            "subcategory_admin_data_entry": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668416&from=find-work&sort=recency&subcategory2_uid=531770282584862724",
+            "subcategory_admin_virtual_assistance": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668416&from=find-work&sort=recency&subcategory2_uid=531770282584862725",
+            "subcategory_admin_project_management": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668416&from=find-work&sort=recency&subcategory2_uid=531770282584862728",
+            "subcategory_admin_market_research": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668416&from=find-work&sort=recency&subcategory2_uid=531770282584862726",
         },
     },
     "category_supports": {
         "name": "Customer Service",
         "keyboard": customer_service_inline_keyboard,
         "subcategories": {
-            "subcategory_customer_all": "All - Customer Service",
-            "subcategory_customer_community_management": "Community Management & Tagging",
-            "subcategory_customer_tech_support": "Customer Service & Tech Support",
+            "subcategory_customer_all": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668417&from=find-work&sort=recency",
+            "subcategory_customer_community_management": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668417&from=find-work&sort=recency&subcategory2_uid=1484275072572772352",
+            "subcategory_customer_tech_support": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668417&from=find-work&sort=recency&subcategory2_uid=531770282584862730",
         },
     },
     "category_data_science": {
         "name": "Data Science & Analytics",
         "keyboard": data_science_inline_keyboard,
         "subcategories": {
-            "subcategory_data_all": "All - Data Science & Analytics",
-            "subcategory_data_analysis": "Data Analysis & Testing",
-            "subcategory_data_etl": "Data Extraction/ETL",
-            "subcategory_data_mining_management": "Data Mining & Management",
-            "subcategory_data_ai_ml": "AI & Machine Learning",
+            "subcategory_data_all": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668420&from=find-work&sort=recency",
+            "subcategory_data_analysis": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668420&from=find-work&sort=recency&subcategory2_uid=531770282593251330",
+            "subcategory_data_etl": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668420&from=find-work&sort=recency&subcategory2_uid=531770282593251331",
+            "subcategory_data_mining_management": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668420&from=find-work&sort=recency&subcategory2_uid=531770282589057038",
+            "subcategory_data_ai_ml": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668420&from=find-work&sort=recency&subcategory2_uid=531770282593251329",
         },
     },
     "category_design_creative": {
         "name": "Design & Creative",
         "keyboard": design_creative_inline_keyboard,
         "subcategories": {
-            "subcategory_design_all": "All - Design & Creative",
-            "subcategory_design_art": "Art & Illustration",
-            "subcategory_design_audio": "Audio & Music Production",
-            "subcategory_design_branding": "Branding & Logo Design",
-            "subcategory_design_nft": "NFT, AR/VR & Game Art",
-            "subcategory_design_graphic": "Graphic, Editorial & Presentation Design",
-            "subcategory_design_performing": "Performing Arts",
-            "subcategory_design_photography": "Photography",
-            "subcategory_design_product": "Product Design",
-            "subcategory_design_video": "Video & Animation",
+            "subcategory_design_all": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668421&from=find-work&sort=recency",
+            "subcategory_design_art": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668421&from=find-work&sort=recency&subcategory2_uid=531770282593251335",
+            "subcategory_design_audio": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668421&from=find-work&sort=recency&subcategory2_uid=531770282593251341",
+            "subcategory_design_branding": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668421&from=find-work&sort=recency&subcategory2_uid=1044578476142100480",
+            "subcategory_design_nft": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668421&from=find-work&sort=recency&subcategory2_uid=1356688560628174848",
+            "subcategory_design_graphic": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668421&from=find-work&sort=recency&subcategory2_uid=531770282593251334",
+            "subcategory_design_performing": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668421&from=find-work&sort=recency&subcategory2_uid=1356688565288046592",
+            "subcategory_design_photography": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668421&from=find-work&sort=recency&subcategory2_uid=531770282593251340",
+            "subcategory_design_product": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668421&from=find-work&sort=recency&subcategory2_uid=531770282601639953",
+            "subcategory_design_video": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668421&from=find-work&sort=recency&subcategory2_uid=1356688570056970240",
         },
     },
     "category_engineering_architecture": {
         "name": "Engineering & Architecture",
         "keyboard": engineering_architecture_inline_keyboard,
         "subcategories": {
-            "subcategory_engineering_all": "All - Engineering & Architecture",
-            "subcategory_engineering_building": "Building & Landscape Architecture",
-            "subcategory_engineering_chemical": "Chemical Engineering",
-            "subcategory_engineering_civil": "Civil & Structural Engineering",
-            "subcategory_engineering_contract": "Contract Manufacturing",
-            "subcategory_engineering_electrical": "Electrical & Electronic Engineering",
-            "subcategory_engineering_interior": "Interior & Trade Show Design",
-            "subcategory_engineering_energy": "Energy & Mechanical Engineering",
-            "subcategory_engineering_physical": "Physical Sciences",
-            "subcategory_engineering_3d_modeling": "3D Modeling & CAD",
+            "subcategory_engineering_all": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862722&from=find-work&sort=recency",
+            "subcategory_engineering_building": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862722&from=find-work&sort=recency&subcategory2_uid=531770282601639949",
+            "subcategory_engineering_chemical": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862722&from=find-work&sort=recency&subcategory2_uid=531770282605834240",
+            "subcategory_engineering_civil": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862722&from=find-work&sort=recency&subcategory2_uid=531770282601639950",
+            "subcategory_engineering_contract": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862722&from=find-work&sort=recency&subcategory2_uid=531770282605834241",
+            "subcategory_engineering_electrical": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862722&from=find-work&sort=recency&subcategory2_uid=531770282601639951",
+            "subcategory_engineering_interior": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862722&from=find-work&sort=recency&subcategory2_uid=531770282605834242",
+            "subcategory_engineering_energy": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862722&from=find-work&sort=recency&subcategory2_uid=531770282601639952",
+            "subcategory_engineering_physical": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862722&from=find-work&sort=recency&subcategory2_uid=1301900647896092672",
+            "subcategory_engineering_3d_modeling": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862722&from=find-work&sort=recency&subcategory2_uid=531770282601639948",
         },
     },
     "category_dev_it": {
         "name": "IT & Networking",
         "keyboard": it_networking_inline_keyboard,
         "subcategories": {
-            "subcategory_it_all": "All - IT & Networking",
-            "subcategory_it_database": "Database Management & Administration",
-            "subcategory_it_erp_crm": "ERP/CRM Software",
-            "subcategory_it_security": "Information Security & Compliance",
-            "subcategory_it_networking": "Network & System Administration",
-            "subcategory_it_devops": "DevOps & Solution Architecture",
+            "subcategory_it_all": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668419&from=find-work&sort=recency",
+            "subcategory_it_database": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668419&from=find-work&sort=recency&subcategory2_uid=531770282589057033",
+            "subcategory_it_erp_crm": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668419&from=find-work&sort=recency&subcategory2_uid=531770282589057034",
+            "subcategory_it_security": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668419&from=find-work&sort=recency&subcategory2_uid=531770282589057036",
+            "subcategory_it_networking": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668419&from=find-work&sort=recency&subcategory2_uid=531770282589057035",
+            "subcategory_it_devops": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668419&from=find-work&sort=recency&subcategory2_uid=531770282589057037",
         },
     },
     "category_legal": {
         "name": "Legal",
         "keyboard": legal_inline_keyboard,
         "subcategories": {
-            "subcategory_legal_all": "All - Legal",
-            "subcategory_legal_corporate": "Corporate & Contract Law",
-            "subcategory_legal_international": "International & Immigration Law",
-            "subcategory_legal_finance_tax": "Finance & Tax Law",
-            "subcategory_legal_public": "Public Law",
+            "subcategory_legal_all": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862723&from=find-work&sort=recency",
+            "subcategory_legal_corporate": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862723&from=find-work&sort=recency&subcategory2_uid=531770282605834246",
+            "subcategory_legal_international": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862723&from=find-work&sort=recency&subcategory2_uid=1484275156546932736",
+            "subcategory_legal_finance_tax": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862723&from=find-work&sort=recency&subcategory2_uid=531770283696353280",
+            "subcategory_legal_public": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862723&from=find-work&sort=recency&subcategory2_uid=1484275408410693632",
         },
     },
     "category_sales_marketing": {
         "name": "Sales & Marketing",
         "keyboard": sales_marketing_inline_keyboard,
         "subcategories": {
-            "subcategory_sales_all": "All - Sales & Marketing",
-            "subcategory_sales_digital": "Digital Marketing",
-            "subcategory_sales_lead_generation": "Lead Generation & Telemarketing",
-            "subcategory_sales_marketing_pr": "Marketing, PR & Brand Strategy",
+            "subcategory_sales_all": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668422&from=find-work&sort=recency",
+            "subcategory_sales_digital": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668422&from=find-work&sort=recency&subcategory2_uid=531770282597445636",
+            "subcategory_sales_lead_generation": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668422&from=find-work&sort=recency&subcategory2_uid=531770282597445634",
+            "subcategory_sales_marketing_pr": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668422&from=find-work&sort=recency&subcategory2_uid=531770282593251343",
         },
     },
     "category_translation": {
         "name": "Translation",
         "keyboard": translation_inline_keyboard,
         "subcategories": {
-            "subcategory_translation_all": "All - Translation",
-            "subcategory_translation_tutoring": "Language Tutoring & Interpretation",
-            "subcategory_translation_localization": "Translation & Localization Services",
+            "subcategory_translation_all": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862720&from=find-work&sort=recency",
+            "subcategory_translation_tutoring": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862720&from=find-work&sort=recency&subcategory2_uid=1534904461842268160",
+            "subcategory_translation_localization": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282584862720&from=find-work&sort=recency&subcategory2_uid=531770282601639939",
         },
     },
     "category_web_mobile_software": {
         "name": "Web, Mobile & Software Development",
         "keyboard": web_mobile_software_dev_inline_keyboard,
         "subcategories": {
-            "subcategory_dev_all": "All - Web, Mobile & Software Development",
-            "subcategory_dev_blockchain": "Blockchain, NFT & Cryptocurrency",
-            "subcategory_dev_ai": "AI Apps & Integration",
-            "subcategory_dev_desktop": "Desktop Application Development",
-            "subcategory_dev_ecommerce": "Ecommerce Development",
-            "subcategory_dev_game": "Game Design & Development",
-            "subcategory_dev_mobile": "Mobile Development",
-            "subcategory_dev_other": "Other - Software Development",
-            "subcategory_dev_product": "Product Management & Scrum",
-            "subcategory_dev_qa": "QA Testing",
-            "subcategory_dev_scripts": "Scripts & Utilities",
-            "subcategory_dev_web_mobile_design": "Web & Mobile Design",
-            "subcategory_dev_web": "Web Development",
+            "subcategory_dev_all": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency",
+            "subcategory_dev_blockchain": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency&subcategory2_uid=1517518458442309632",
+            "subcategory_dev_ai": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency&subcategory2_uid=1737190722360750082",
+            "subcategory_dev_desktop": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency&subcategory2_uid=531770282589057025",
+            "subcategory_dev_ecommerce": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency&subcategory2_uid=531770282589057026",
+            "subcategory_dev_game": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency&subcategory2_uid=531770282589057027",
+            "subcategory_dev_mobile": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency&subcategory2_uid=531770282589057024",
+            "subcategory_dev_other": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency&subcategory2_uid=531770282589057032",
+            "subcategory_dev_product": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency&subcategory2_uid=531770282589057030",
+            "subcategory_dev_qa": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency&subcategory2_uid=531770282589057031",
+            "subcategory_dev_scripts": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency&subcategory2_uid=531770282589057028",
+            "subcategory_dev_web_mobile_design": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency&subcategory2_uid=531770282589057029",
+            "subcategory_dev_web": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668418&from=find-work&sort=recency&subcategory2_uid=531770282584862733",
         },
     },
     "category_writing": {
         "name": "Writing",
         "keyboard": writing_inline_keyboard,
         "subcategories": {
-            "subcategory_writing_all": "All - Writing",
-            "subcategory_writing_sales": "Sales & Marketing Copywriting",
-            "subcategory_writing_content": "Content Writing",
-            "subcategory_writing_editing": "Editing & Proofreading Services",
-            "subcategory_writing_professional": "Professional & Business Writing",
+            "subcategory_writing_all": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668423&from=find-work&sort=recency",
+            "subcategory_writing_sales": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668423&from=find-work&sort=recency&subcategory2_uid=1534904462131675136",
+            "subcategory_writing_content": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668423&from=find-work&sort=recency&subcategory2_uid=1301900640421842944",
+            "subcategory_writing_editing": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668423&from=find-work&sort=recency&subcategory2_uid=531770282597445644",
+            "subcategory_writing_professional": "https://www.upwork.com/nx/search/jobs/?category2_uid=531770282580668423&from=find-work&sort=recency&subcategory2_uid=531770282597445646",
         },
     },
 }
@@ -180,21 +182,34 @@ category_data = {
 parsed_results = {}
 
 
+user_filters = {}
+
+#def get_user_filter(telegram_id, filter_name):
+ #   """Получает сохранённый фильтр пользователя."""
+
+  #  return user_filters.get(telegram_id, {}).get(filter_name)
+
+
+
 @router.message(Command("parsing"))
 async def start_handler(message: Message):
+    telegram_id = message.from_user.id
+
     await message.answer('Выполняется поиск...')
 
-    # Запускаем парсинг и получаем результаты
-    results = parse_upwork()  # Без await, так как функция синхронная
+    urls = get_link()
+    # Запускаем парсинг (асинхронно)
+    parsing = parse_upwork(urls)
+
 
     # Если нет результатов
-    if not results:
+    if not parsing:
         await message.answer("Не найдено результатов.")
         return
 
-    # Отправляем результаты
-    for result in results:
-        await message.answer(f"Название: {result['title']}\nСсылка: {result['link']}")
+    # Отправляем результат
+    for pars in parsing:
+        await message.answer(f"Название: {pars['title']}\nСсылка: {pars['link']}")
 
 @router.message(Command("start"))
 async def start_handler(message: Message):
@@ -230,9 +245,11 @@ async def button_handler(callback: CallbackQuery):
     # Проверяем, выбрана ли подкатегория
     for category, data in category_data.items():
         if callback.data in data.get("subcategories", {}):
-            selected_subcategory = data["subcategories"][callback.data]
+            subcategory_name = data["subcategories"][callback.data]
+            subcategory_url = callback.data # url страницы
+
             await callback.message.edit_text(
-                text=f"Вы выбрали подтему: {selected_subcategory}.\n"
+                text=f"Вы выбрали подтему: {subcategory_name}.\n"
                      f"Настройка фильтров для этой подтемы будет реализована в следующем шаге."
             )
 
@@ -244,7 +261,7 @@ async def button_handler(callback: CallbackQuery):
             await callback.answer()
 
             # Сохраняем подкатегорию во временные данные
-            temp_save_user_filters(telegram_id, subcategory=selected_subcategory)
+            temp_save_user_filters(telegram_id, subcategory=subcategory_name)
             return  # Прерываем дальнейшую обработку
 
     # Если ни категория, ни подкатегория не найдены

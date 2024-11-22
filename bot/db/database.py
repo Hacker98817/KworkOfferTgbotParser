@@ -39,6 +39,14 @@ def add_user(telegram_id, username):
 
 # Словарь для временного хранения данных о фильтрах пользователей
 user_filters_temp = {}
+def get_link():
+    telegram_id = list(user_filters_temp.keys())[0]
+
+    # Извлекаем значение subcategory
+    subcategory_link = user_filters_temp[telegram_id]['subcategory']
+    print(subcategory_link)
+    return subcategory_link
+    #print(subcategory_link)
 
 
 # Функция для временного сохранения фильтров
@@ -46,12 +54,15 @@ def temp_save_user_filters(telegram_id, category=None, subcategory=None, level=N
     if telegram_id not in user_filters_temp:
         user_filters_temp[telegram_id] = {}
 
+
     if category:
         user_filters_temp[telegram_id]['category'] = category
     if subcategory:
         user_filters_temp[telegram_id]['subcategory'] = subcategory
     if level:
         user_filters_temp[telegram_id]['level'] = level
+
+    print(user_filters_temp)
 
 
 
@@ -103,4 +114,8 @@ def save_or_update_group(telegram_id):
         except Exception as e:
             print(f"Ошибка при сохранении группы: {e}")
             conn.rollback()
+
+
+
+
 
