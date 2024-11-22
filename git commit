@@ -1,0 +1,53 @@
+[33mcommit 2e9d71a0f47e935d07fbc8a58f329f55cab3a2ff[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: ashlyy <Hacker98817@gmail.com>
+Date:   Thu Nov 21 16:36:49 2024 +0500
+
+    Добавленные ссылки для категорий
+
+[33mcommit 32474dfcaf443a369ffb022c522572071972209b[m
+Author: ashlyy <Hacker98817@gmail.com>
+Date:   Thu Nov 21 15:06:25 2024 +0500
+
+    Интегрировал парсинг, разобрался с красными логами
+
+[33mcommit c965a6509dec14c835f2f8fe4f774abbf059c772[m
+Author: ashlyy <Hacker98817@gmail.com>
+Date:   Wed Nov 20 17:51:13 2024 +0500
+
+    Худо-бедно настроил сохранение в группы с фильтрами
+
+[33mcommit 20c809c2f78349c00d93c2ac24d56d8c8cbc8e3b[m
+Author: ashlyy <Hacker98817@gmail.com>
+Date:   Wed Nov 20 15:16:04 2024 +0500
+
+    Начало работы с базой данных
+
+[33mcommit 5dd87df93826ad3131e2fe4574582a0088be678b[m[33m ([m[1;31morigin/refactoring/buttons-and-handlers[m[33m, [m[1;32mrefactoring/buttons-and-handlers[m[33m)[m
+Author: ashlyy <Hacker98817@gmail.com>
+Date:   Tue Nov 19 17:13:20 2024 +0500
+
+    change
+
+[33mcommit 27ab8d653485b5aba545996ba2f5850572c0b527[m
+Author: ashlyy <Hacker98817@gmail.com>
+Date:   Tue Nov 19 16:19:43 2024 +0500
+
+    Последнее сохранение для максима
+
+[33mcommit 1e9ee71d15849300f31619253ee0e01c37faf61c[m
+Author: ashlyy <Hacker98817@gmail.com>
+Date:   Tue Nov 19 11:37:50 2024 +0500
+
+    Обновлён функционал бота: добавлена обработка ошибок
+
+[33mcommit 3e0f36d754aef158e27cb3a692641a8da70cca1d[m
+Author: ashlyy <Hacker98817@gmail.com>
+Date:   Mon Nov 18 14:56:35 2024 +0500
+
+    Initial commit
+
+[33mcommit 2ad5028d610972c098e7f01bc5c021ad82565fc9[m
+Author: ashlyy <Hacker98817@gmail.com>
+Date:   Mon Nov 18 14:08:50 2024 +0500
+
+    Первый коммит: Инициализация проекта
