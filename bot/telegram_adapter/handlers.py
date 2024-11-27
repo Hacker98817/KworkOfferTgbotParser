@@ -17,9 +17,10 @@ from buttons import (
     translation_inline_keyboard,
     web_mobile_software_dev_inline_keyboard,
     writing_inline_keyboard,
+    choose_sold_keyboard,
 )
-from buttons import expirience_level_keyboard
-from bot.core.upwork_parser import parse_upwork
+from buttons import expirience_level_keyboard, choose_location_keyboard
+from bot.core.upwork_parser import parse_upwork, parse_upwork_async
 from bot.db.database import get_link
 import asyncio
 
@@ -194,22 +195,21 @@ user_filters = {}
 @router.message(Command("parsing"))
 async def start_handler(message: Message):
     telegram_id = message.from_user.id
-
     await message.answer('Выполняется поиск...')
 
-    urls = get_link()
+    urls = await get_link(telegram_id)
     # Запускаем парсинг (асинхронно)
-    parsing = parse_upwork(urls)
+    #parsing = parse_upwork(urls)
+    results = await parse_upwork_async(urls)
 
+    # Формируем ответ
+    if results:
+        response = "\n\n".join([f"Название: {r['title']}\nСсылка: {r['link']}" for r in results])
+    else:
+        response = "По вашему запросу ничего не найдено."
 
-    # Если нет результатов
-    if not parsing:
-        await message.answer("Не найдено результатов.")
-        return
-
-    # Отправляем результат
-    for pars in parsing:
-        await message.answer(f"Название: {pars['title']}\nСсылка: {pars['link']}")
+    # Отправляем ответ только этому пользователю
+    await message.answer(response)
 
 @router.message(Command("start"))
 async def start_handler(message: Message):
@@ -217,7 +217,7 @@ async def start_handler(message: Message):
     username = message.from_user.username
 
     # Добавляем пользователя в базу данных, если его там нет
-    add_user(telegram_id, username)
+    await add_user(telegram_id, username)
     await message.answer(
         text="Привет! Выберите категорию, чтобы настроить фильтры:",
         reply_markup=categories_keyboard,
@@ -237,7 +237,6 @@ async def button_handler(callback: CallbackQuery):
                  f"Выберите подтему:",
             reply_markup=selected_category["keyboard"],
         )
-        await callback.answer()
         # Сохраняем категорию во временные данные
         temp_save_user_filters(telegram_id, category=selected_category["name"])
         return  # Прерываем дальнейшую обработку
@@ -247,11 +246,6 @@ async def button_handler(callback: CallbackQuery):
         if callback.data in data.get("subcategories", {}):
             subcategory_name = data["subcategories"][callback.data]
             subcategory_url = callback.data # url страницы
-
-            await callback.message.edit_text(
-                text=f"Вы выбрали подтему: {subcategory_name}.\n"
-                     f"Настройка фильтров для этой подтемы будет реализована в следующем шаге."
-            )
 
             # Переходим к настройке уровня опыта
             await callback.message.edit_text(
@@ -264,32 +258,122 @@ async def button_handler(callback: CallbackQuery):
             temp_save_user_filters(telegram_id, subcategory=subcategory_name)
             return  # Прерываем дальнейшую обработку
 
-    # Если ни категория, ни подкатегория не найдены
-    await callback.message.edit_text(text="Непонятное действие. Попробуйте снова.")
     await callback.answer()
 
+
+
+
+
+
     level_mapping = {
-        "category_entry": "Начальный уровень",
-        "category_intermediate": "Средний уровень",
-        "category_expert": "Экспертный уровень",
+        "category_entry": {
+            'description': "Начальный уровень",
+            'tier': '&contractor_tier=1'},
+
+        "category_intermediate": {
+            'description': "Средний уровень",
+            'tier': '&contractor_tier=2'},
+
+        "category_expert": {
+            'description': "Экспертный уровень",
+            'tier': '&contractor_tier=3'}
     }
 
     if callback.data in level_mapping:
-        selected_level = level_mapping[callback.data]
+        selected_level = level_mapping[callback.data]['description']
+        tier = level_mapping[callback.data]["tier"]
+
+        # Переходим к настройке оплаты
         await callback.message.edit_text(
-            text=f"Вы выбрали уровень опыта: {selected_level}.\n"
-                 f"Настройка завершена!, Введите команду /parsing что бы найти результаты",
+            text=f"Вы выбрали {selected_level}.\nВыберете оплату:",
+            reply_markup=choose_sold_keyboard,  # Показываем клавиатуру с уровнями
         )
+        await callback.answer()
 
         # Сохраняем уровень во временные данные
-        temp_save_user_filters(telegram_id, level=selected_level)
+        temp_save_user_filters(telegram_id, level=selected_level, tier=tier)
 
-        # Сохраняем фильтры в базу данных и проверяем наличие группы
-        save_or_update_group(telegram_id)
+        return  # Прерываем дальнейшую обработку
+
+
+
+
+
+
+
+
+    sold_mapping = {
+        "category_hourly": {
+            'description': "Почасовая",
+            'payment': '&t=0'},
+
+        "category_fixed_price": {
+            'description': "Фиксированная",
+            'payment': '&t=1'}
+    }
+
+    if callback.data in sold_mapping:
+        selected_payment = sold_mapping[callback.data]['description']
+        payment = sold_mapping[callback.data]['payment']
+
+        # Переходим к настройке оплаты
+        await callback.message.edit_text(
+            text=f"Вы выбрали {selected_payment}.\nВыберете регион:",
+            reply_markup=choose_location_keyboard,  # Показываем клавиатуру с локациями
+        )
+        await callback.answer()
+
+        # Сохраняем уровень во временные данные
+        temp_save_user_filters(telegram_id, selected_payment=selected_payment, payment=payment)
+
 
         await callback.answer()
         return  # Прерываем дальнейшую обработку
 
+
+
+
+
+
+
+    location_mapping = {
+        "category_america": {
+            'description': "Америка",
+            'location': '&location=Americas'},
+
+        "category_europe": {
+            'description': "Европа",
+            'location': '&location=Europe'},
+
+        "category_asia": {
+            'description': "Азия",
+            'location': '&location=Asia'},
+
+        "category_africa": {
+            'description': "Африка",
+            'location': '&location=Africa'},
+
+        "category_india": {
+            'description': "Индия",
+            'location': '&location=India'},
+    }
+
+    if callback.data in location_mapping:
+        selected_location = location_mapping[callback.data]['description']
+        location = location_mapping[callback.data]['location']
+        await callback.message.edit_text(
+            text=f"Вы выбрали регион: {selected_location}.\n"
+                 f"Настройка завершена!, Введите команду /parsing что бы найти результаты",
+        )
+
+        # Сохраняем уровень во временные данные
+        temp_save_user_filters(telegram_id, selected_location=selected_location, location=location)
+
+        # Сохраняем фильтры в базу данных и проверяем наличие группы
+        await save_or_update_group(telegram_id)
+
+        await callback.answer()
+        return  # Прерываем дальнейшую обработку
 
 
 

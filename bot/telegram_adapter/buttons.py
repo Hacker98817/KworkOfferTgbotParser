@@ -216,6 +216,9 @@ writing_inline_keyboard = InlineKeyboardMarkup(
 
 
 
+
+
+
 #Кнопки цены
 expirience_level = [
     InlineKeyboardButton(text="Entry Level", callback_data="category_entry"),
@@ -223,8 +226,44 @@ expirience_level = [
     InlineKeyboardButton(text="Expert", callback_data="category_expert"),
 ]
 
-# Writing
+
 expirience_level_keyboard = InlineKeyboardMarkup(
     row_width=1, inline_keyboard=[expirience_level]
 )
+
+
+
+
+
+
+#Кнопки часовая/фиксированная оплата
+choose_sold = [
+    InlineKeyboardButton(text="Hourly", callback_data="category_hourly"),
+    InlineKeyboardButton(text="Fixed-Price", callback_data="category_fixed_price"),
+]
+
+
+choose_sold_keyboard = InlineKeyboardMarkup(
+    row_width=1, inline_keyboard=[choose_sold]
+)
+
+
+
+
+
+#Кнопки локации
+location = [
+    InlineKeyboardButton(text="America", callback_data="category_america"),
+    InlineKeyboardButton(text="Europe", callback_data="category_europe"),
+    InlineKeyboardButton(text="Asia", callback_data="category_asia"),
+    InlineKeyboardButton(text="Africa", callback_data="category_africa"),
+    InlineKeyboardButton(text="India", callback_data="category_india"),
+]
+
+
+choose_location_keyboard = InlineKeyboardMarkup(
+    row_width=1, inline_keyboard=[location]
+)
+
+
 
