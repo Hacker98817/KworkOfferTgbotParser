@@ -1,7 +1,3 @@
-import psycopg2
-from contextlib import closing
-import asyncpg
-
 # Подключение к базе данных PostgreSQL
 import asyncpg
 
@@ -57,14 +53,12 @@ async def get_link(telegram_id):
     subcategory_link = user_filters_temp[telegram_id]['subcategory']
     link_tier = subcategory_link+user_filters_temp[telegram_id]['tier']
     link_payment = link_tier+user_filters_temp[telegram_id]['payment']
-    link_location = link_payment+user_filters_temp[telegram_id]['location']
+    link_location = link_payment+user_filters_temp[telegram_id]['location']+'&per_page=50'
     return link_location
 
 
 # Функция для временного сохранения фильтров
-def temp_save_user_filters(telegram_id, **kwargs): #category=None, subcategory=None, level=None, tier=None, selected_payment=None, payment=None, selected_location=None, location=None):
-    #if telegram_id not in user_filters_temp:
-        #user_filters_temp[telegram_id] = {}
+def temp_save_user_filters(telegram_id, **kwargs):
 
     """
         Сохраняет или обновляет временные фильтры пользователя.
@@ -76,28 +70,6 @@ def temp_save_user_filters(telegram_id, **kwargs): #category=None, subcategory=N
     for key, value in kwargs.items():
         if value is not None:
             user_filters_temp[telegram_id][key] = value
-
-#    if category:
-#        user_filters_temp[telegram_id]['category'] = category
-#    if subcategory:
-#        user_filters_temp[telegram_id]['subcategory'] = subcategory
-#    if level:
-#        user_filters_temp[telegram_id]['level'] = level
-#    if tier:
-#        user_filters_temp[telegram_id]['tier'] = tier
-#    if selected_payment:
-#        user_filters_temp[telegram_id]['selected_payment'] = selected_payment
-#    if payment:
-#        user_filters_temp[telegram_id]['payment'] = payment
-#    if selected_location:
-#        user_filters_temp[telegram_id]['selected_location'] = selected_location
-#    if location:
-#        user_filters_temp[telegram_id]['location'] = location
-
-
-
-    #print(user_filters_temp)
-
 
 
 
@@ -173,5 +145,41 @@ async def get_all_groups_with_links():
         return []
     finally:
         await conn.close()
+
+
+
+
+
+#DELETE_GROUP
+# Получение списка групп, в которых состоит пользователь
+async def get_user_groups(telegram_id: int):
+    query = """
+    SELECT id, category 
+    FROM groups 
+    WHERE $1 = ANY(user_ids)
+    """
+    conn = await get_db_connection()
+    try:
+        groups = await conn.fetch(query, telegram_id)
+        return groups
+    finally:
+        await conn.close()
+
+
+# Удаление пользователя из указанной группы
+async def remove_user_from_group(telegram_id: int, group_id: int):
+    query = """
+    UPDATE groups 
+    SET user_ids = array_remove(user_ids, $1) 
+    WHERE id = $2
+    """
+    conn = await get_db_connection()
+    try:
+        await conn.execute(query, telegram_id, group_id)
+        print(f"Пользователь {telegram_id} удален из группы {group_id}")
+    finally:
+        await conn.close()
+
+
 
 

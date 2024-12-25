@@ -1,5 +1,22 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+#Приветствие бота
+menu_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="Add group", callback_data="Add_group")],
+    [InlineKeyboardButton(text="Delete group", callback_data="Delete_group")],
+    [InlineKeyboardButton(text="Notifications", callback_data="Notifications")]
+])
+
+
+
+
+
+#Удаления из групп
+
+
+
+
+
 #Основные категории
 categories_keyboard = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="Accounting & Consulting", callback_data="category_finance_accounting")],
@@ -31,10 +48,14 @@ accounting_consulting_buttons = [
     InlineKeyboardButton(text="Other - Accounting & Consulting", callback_data="subcategory_accounting_other"),
 ]
 
-accounting_consulting_inline_keyboard = InlineKeyboardMarkup(
-    row_width=1, inline_keyboard=[accounting_consulting_buttons]
-)
+#accounting_consulting_inline_keyboard = InlineKeyboardMarkup(
+#    row_width=1, inline_keyboard=[accounting_consulting_buttons]
+#)
 
+# Создание клавиатуры с кнопками в столбик
+accounting_consulting_inline_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[[button] for button in accounting_consulting_buttons]
+)
 
 # Подкатегории для "Admin Support" (Административная поддержка)
 admin_support_buttons = [
@@ -46,9 +67,13 @@ admin_support_buttons = [
 ]
 
 # Admin Support
+#admin_support_inline_keyboard = InlineKeyboardMarkup(
+#    row_width=1, inline_keyboard=[admin_support_buttons]
+#)
 admin_support_inline_keyboard = InlineKeyboardMarkup(
-    row_width=1, inline_keyboard=[admin_support_buttons]
+    inline_keyboard=[[button] for button in admin_support_buttons]
 )
+
 
 
 # Подкатегории для "Customer Service" (Обслуживание клиентов)
@@ -59,10 +84,12 @@ customer_service_buttons = [
 ]
 
 # Customer Service
+#customer_service_inline_keyboard = InlineKeyboardMarkup(
+#    row_width=1, inline_keyboard=[customer_service_buttons]
+#)
 customer_service_inline_keyboard = InlineKeyboardMarkup(
-    row_width=1, inline_keyboard=[customer_service_buttons]
+    inline_keyboard=[[button] for button in customer_service_buttons]
 )
-
 
 # Подкатегории для "Data Science & Analytics" (Наука о данных и аналитика)
 data_science_buttons = [
@@ -74,9 +101,14 @@ data_science_buttons = [
 ]
 
 # Data Science & Analytics
+#data_science_inline_keyboard = InlineKeyboardMarkup(
+#    row_width=1, inline_keyboard=[data_science_buttons]
+#)
 data_science_inline_keyboard = InlineKeyboardMarkup(
-    row_width=1, inline_keyboard=[data_science_buttons]
+    inline_keyboard=[[button] for button in data_science_buttons]
 )
+
+
 
 
 # Подкатегории для "Design & Creative" (Дизайн и креатив)
@@ -94,9 +126,14 @@ design_creative_buttons = [
 ]
 
 # Design & Creative
+#design_creative_inline_keyboard = InlineKeyboardMarkup(
+#    row_width=1, inline_keyboard=[design_creative_buttons]
+#)
 design_creative_inline_keyboard = InlineKeyboardMarkup(
-    row_width=1, inline_keyboard=[design_creative_buttons]
+    inline_keyboard=[[button] for button in design_creative_buttons]
 )
+
+
 
 
 # Подкатегории для "Engineering & Architecture" (Инженерия и архитектура)
@@ -114,9 +151,14 @@ engineering_architecture_buttons = [
 ]
 
 # Engineering & Architecture
+#engineering_architecture_inline_keyboard = InlineKeyboardMarkup(
+#    row_width=1, inline_keyboard=[engineering_architecture_buttons]
+#)
 engineering_architecture_inline_keyboard = InlineKeyboardMarkup(
-    row_width=1, inline_keyboard=[engineering_architecture_buttons]
+    inline_keyboard=[[button] for button in engineering_architecture_buttons]
 )
+
+
 
 
 # Подкатегории для "IT & Networking" (IT и Сетевые технологии)
@@ -130,9 +172,15 @@ it_networking_buttons = [
 ]
 
 # IT & Networking
+#it_networking_inline_keyboard = InlineKeyboardMarkup(
+#    row_width=1, inline_keyboard=[it_networking_buttons]
+#)
 it_networking_inline_keyboard = InlineKeyboardMarkup(
-    row_width=1, inline_keyboard=[it_networking_buttons]
+    inline_keyboard=[[button] for button in it_networking_buttons]
 )
+
+
+
 
 
 # Подкатегории для "Legal" (Юридическая информация)
@@ -145,9 +193,16 @@ legal_buttons = [
 ]
 
 # Legal
+#legal_inline_keyboard = InlineKeyboardMarkup(
+#    row_width=1, inline_keyboard=[legal_buttons]
+#)
 legal_inline_keyboard = InlineKeyboardMarkup(
-    row_width=1, inline_keyboard=[legal_buttons]
+    inline_keyboard=[[button] for button in legal_buttons]
 )
+
+
+
+
 
 
 # Подкатегории для "Sales & Marketing" (Продажи и маркетинг)
@@ -159,9 +214,15 @@ sales_marketing_buttons = [
 ]
 
 # Sales & Marketing
+#sales_marketing_inline_keyboard = InlineKeyboardMarkup(
+#    row_width=1, inline_keyboard=[sales_marketing_buttons]
+#)
 sales_marketing_inline_keyboard = InlineKeyboardMarkup(
-    row_width=1, inline_keyboard=[sales_marketing_buttons]
+    inline_keyboard=[[button] for button in sales_marketing_buttons]
 )
+
+
+
 
 
 # Подкатегории для "Translation" (Перевод)
@@ -172,9 +233,15 @@ translation_buttons = [
 ]
 
 # Translation
+#translation_inline_keyboard = InlineKeyboardMarkup(
+#    row_width=1, inline_keyboard=[translation_buttons]
+#)
 translation_inline_keyboard = InlineKeyboardMarkup(
-    row_width=1, inline_keyboard=[translation_buttons]
+    inline_keyboard=[[button] for button in translation_buttons]
 )
+
+
+
 
 #ПРОДОЛЖИТЬ ОТСЮДА
 # Подкатегории для "Web, Mobile & Software Dev" (Разработка веб-, мобильных устройств и программного обеспечения)
@@ -195,9 +262,15 @@ web_mobile_software_dev_buttons = [
 ]
 
 # Web, Mobile & Software Dev
+#web_mobile_software_dev_inline_keyboard = InlineKeyboardMarkup(
+#    row_width=1, inline_keyboard=[web_mobile_software_dev_buttons]
+#)
 web_mobile_software_dev_inline_keyboard = InlineKeyboardMarkup(
-    row_width=1, inline_keyboard=[web_mobile_software_dev_buttons]
+    inline_keyboard=[[button] for button in web_mobile_software_dev_buttons]
 )
+
+
+
 
 
 # Подкатегории для "Writing" (Написание)
@@ -210,9 +283,13 @@ writing_buttons = [
 ]
 
 # Writing
+#writing_inline_keyboard = InlineKeyboardMarkup(
+#    row_width=1, inline_keyboard=[writing_buttons]
+#)
 writing_inline_keyboard = InlineKeyboardMarkup(
-    row_width=1, inline_keyboard=[writing_buttons]
+    inline_keyboard=[[button] for button in writing_buttons]
 )
+
 
 
 
