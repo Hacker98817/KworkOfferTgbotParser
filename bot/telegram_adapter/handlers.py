@@ -1,4 +1,4 @@
-from aiogram import Router, types
+from aiogram import Router
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 from bot.db.database import add_user
@@ -20,14 +20,14 @@ from buttons import (
     choose_sold_keyboard,
 )
 from buttons import expirience_level_keyboard, choose_location_keyboard
-from bot.core.upwork_parser import parse_upwork, parse_upwork_async
-from bot.db.database import get_link
-import asyncio
+from bot.telegram_adapter.buttons import menu_keyboard
+from bot.db.database import get_user_groups
+
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from bot.db.database import get_db_connection
 
 router = Router()
 
-
-categories_keyboard_new = {}
 
 category_data = {
     "category_finance_accounting": {
@@ -180,49 +180,96 @@ category_data = {
     },
 }
 
-parsed_results = {}
-
-
-user_filters = {}
-
-#def get_user_filter(telegram_id, filter_name):
- #   """Получает сохранённый фильтр пользователя."""
-
-  #  return user_filters.get(telegram_id, {}).get(filter_name)
-
-
-
-@router.message(Command("parsing"))
-async def start_handler(message: Message):
-    telegram_id = message.from_user.id
-    await message.answer('Выполняется поиск...')
-
-    urls = await get_link(telegram_id)
-    # Запускаем парсинг (асинхронно)
-    #parsing = parse_upwork(urls)
-    results = await parse_upwork_async(urls)
-
-    # Формируем ответ
-    if results:
-        response = "\n\n".join([f"Название: {r['title']}\nСсылка: {r['link']}" for r in results])
-    else:
-        response = "По вашему запросу ничего не найдено."
-
-    # Отправляем ответ только этому пользователю
-    await message.answer(response)
 
 @router.message(Command("start"))
-async def start_handler(message: Message):
-    telegram_id = message.from_user.id
-    username = message.from_user.username
+async def start(message: Message):
+    await message.answer(
+        text="Привет! Это бот заказов. Введите /menu, что бы выбрать дальнейшие действия.")
+
+
+
+@router.message(Command("menu"))
+async def start_menu(message: Message):
+    await message.answer(
+        text="Что нужно сделать?",
+        reply_markup=menu_keyboard,)
+
+
+#УДАЛЕНИЕ ФИЛЬТРОВ
+
+@router.callback_query(lambda callback: callback.data == "Delete_group")
+async def delete_group(callback: CallbackQuery):
+    telegram_id = callback.from_user.id
+
+    groups = await get_user_groups(telegram_id)
+    if not groups:
+        await callback.message.answer("Вы не состоите ни в одной группе.")
+        await callback.answer()
+        return
+
+    keyboard_builder = InlineKeyboardBuilder()
+    for group in groups:
+        keyboard_builder.button(
+            text=group["category"],
+            callback_data=f"delete_{group['id']}"
+        )
+
+    keyboard = keyboard_builder.as_markup()
+    await callback.message.answer(
+        "Выберите группу для удаления:",
+        reply_markup=keyboard
+    )
+    await callback.answer()
+
+
+@router.callback_query(lambda callback: callback.data.startswith("delete_"))
+async def delete_group_from_db(callback: CallbackQuery):
+    telegram_id = callback.from_user.id
+    group_id = int(callback.data.split("_")[1])  # Извлекаем ID группы из callback_data
+
+    # Удаляем пользователя из группы
+    query = """
+    UPDATE groups
+    SET user_ids = array_remove(user_ids, $1)
+    WHERE id = $2 AND $1 = ANY(user_ids)
+    """
+
+    conn = await get_db_connection()
+    try:
+        result = await conn.execute(query, telegram_id, group_id)
+
+        # Проверяем, было ли удаление
+        if result:
+            await callback.message.edit_text("Вы успешно удалены из группы.")
+        else:
+            await callback.message.edit_text("Произошла ошибка при удалении из группы.")
+    except Exception as e:
+        await callback.message.edit_text(f"Ошибка: {str(e)}")
+    finally:
+        await conn.close()
+
+    await callback.answer()
+
+
+
+
+#ДОБАВЛЕНИЕ ФИЛЬТРОВ
+@router.callback_query(lambda callback: callback.data == "Add_group")
+async def start_handler(callback: CallbackQuery):
+    telegram_id = callback.from_user.id
+    username = callback.from_user.username
 
     # Добавляем пользователя в базу данных, если его там нет
     await add_user(telegram_id, username)
-    await message.answer(
+    await callback.message.edit_text(
         text="Привет! Выберите категорию, чтобы настроить фильтры:",
         reply_markup=categories_keyboard,
 
     )
+
+
+#НАМ НУЖНО СДЕЛАТЬ НОРМА КОМАДНУ СТАРТ ГДЕ ИЗ КНОПОК МОЖНО ВЫБРАТЬ ДОБАВЛЕНИЕ ГРУППЫ, КНОПКА УВЕДОМЛЕНИЙ, ИЛИ УДАЛЕНИЕ ГРУППЫ
+
 
 @router.callback_query()
 async def button_handler(callback: CallbackQuery):
@@ -245,7 +292,7 @@ async def button_handler(callback: CallbackQuery):
     for category, data in category_data.items():
         if callback.data in data.get("subcategories", {}):
             subcategory_name = data["subcategories"][callback.data]
-            subcategory_url = callback.data # url страницы
+            #subcategory_url = callback.data # url страницы
 
             # Переходим к настройке уровня опыта
             await callback.message.edit_text(
@@ -299,9 +346,6 @@ async def button_handler(callback: CallbackQuery):
 
 
 
-
-
-
     sold_mapping = {
         "category_hourly": {
             'description': "Почасовая",
@@ -334,8 +378,6 @@ async def button_handler(callback: CallbackQuery):
 
 
 
-
-
     location_mapping = {
         "category_america": {
             'description': "Америка",
@@ -363,7 +405,7 @@ async def button_handler(callback: CallbackQuery):
         location = location_mapping[callback.data]['location']
         await callback.message.edit_text(
             text=f"Вы выбрали регион: {selected_location}.\n"
-                 f"Настройка завершена!, Введите команду /parsing что бы найти результаты",
+                 f"Настройка завершена! В течении 5 минут поступят заказы.",
         )
 
         # Сохраняем уровень во временные данные
